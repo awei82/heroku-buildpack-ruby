@@ -822,6 +822,9 @@ BUNDLE
       if $?.success?
         puts "Bundle completed (#{"%.2f" % bundle_time}s)"
         log "bundle", :status => "success"
+
+        build_routes(env_vars)
+
         puts "Cleaning up the bundler cache."
         # Only show bundle clean output when not using default cache
         if load_default_cache?
@@ -1292,5 +1295,15 @@ MESSAGE
     @bundler_cache.clear(stack)
     # need to reinstall language pack gems
     install_bundler_in_app(slug_vendor_base)
+  end
+
+  def build_routes(env_vars)
+    topic "Building routes"
+    command_1 = 'bundle exec roda-parse_routes -f routes.json app/router.rb'
+    command_2 = 'bundle exec bin/routes'
+    puts "Running: #{command_1}"
+    run(command_1, user_env: true, env: env_vars)
+    puts "Running: #{command_2}"
+    run(command_2, user_env: true, env: env_vars)
   end
 end
