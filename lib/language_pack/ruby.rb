@@ -823,6 +823,7 @@ BUNDLE
         puts "Bundle completed (#{"%.2f" % bundle_time}s)"
         log "bundle", :status => "success"
 
+        topic "Building routes"
         build_routes(env_vars)
 
         puts "Cleaning up the bundler cache."
@@ -1298,7 +1299,6 @@ MESSAGE
   end
 
   def build_routes(env_vars)
-    topic "Building routes"
     command_1 = 'bundle exec roda-parse_routes -f routes.json app/router.rb'
     command_2 = 'bundle exec bin/routes'
     puts "Running: #{command_1}"
